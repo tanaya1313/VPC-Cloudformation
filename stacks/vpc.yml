@@ -1,0 +1,50 @@
+Parameters:
+  VPCName:
+    Type: String
+    Description: Name of the VPC
+    Default: myVPC
+  environment:
+    Type: String
+    Description: The environment for the stack
+    Default: devlopment
+
+
+Resources:
+  
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+      - Key: Name
+        Value:  !Ref VPCName
+      - Key: stack
+        Value: !Ref environment
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "${VPCName}-igw"
+  AttachGateway: 
+      Type: AWS::EC2::VPCGatewayAttachment
+      Properties:
+        VpcId: !Ref VPC
+        InternetGatewayId: !Ref InternetGateway
+
+
+Outputs:
+  VPCID:
+    Description: The ID of the VPC
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${VPCName}-VPCId"
+  InternetGatewayId:
+    Value: !Ref InternetGateway
+    Export:
+      Name: !Sub "${VPCName}-InternetGatewayId"          

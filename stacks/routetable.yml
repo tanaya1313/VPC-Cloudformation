@@ -1,0 +1,120 @@
+Parameters:
+  VPCName:
+    Type: String
+    Description: Name of the VPC
+    Default: myVPC
+  environment:
+    Type: String
+    Description: The environment for the stack
+    Default: devlopment
+
+Resources:
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "${VPCName}-Public-RT"
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !ImportValue
+        Fn::Sub: "${VPCName}-InternetGatewayId"
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "${VPCName}-Private-RT"
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !ImportValue
+        Fn::Sub: "${VPCName}-NatGatewayId"
+
+  #### Route Associations
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PublicSubnet1Id"
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PublicSubnet2Id"
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnet3RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PublicSubnet3Id"
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnet4RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PublicSubnet4Id"
+      RouteTableId: !Ref PublicRouteTable
+
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PrivateSubnet1Id"
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PrivateSubnet2Id"
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet3RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PrivateSubnet3Id"
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet4RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PrivateSubnet4Id"
+      RouteTableId: !Ref PrivateRouteTable
+
+Outputs:
+  PublicRouteTableId:
+    Description: The ID of the public route table
+    Value: !Ref PublicRouteTable
+    Export:
+      Name: !Sub "${VPCName}-PublicRouteTableId"
+
+  PrivateRouteTableId:
+    Description: The ID of the private route table
+    Value: !Ref PrivateRouteTable
+    Export:
+      Name: !Sub "${VPCName}-PrivateRouteTableId"

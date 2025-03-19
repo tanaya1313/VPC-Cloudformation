@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Master CloudFormation template for orchestrating the deployment of the entire VPC infrastructure.
+
+Parameters:
+  VPCName:
+    Type: String
+    Description: Name of the VPC
+    Default: myVPC
+  environment:
+    Type: String
+    Description: The environment for the stack
+    Default: devlopment
+
+
+Resources:
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://my-cloudformation-vpc-bucket.s3.us-east-1.amazonaws.com/templates/vpc.yml
+      Parameters:
+        VPCName: !Ref VPCName
+        environment: !Ref environment
+        
+  SubnetStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://my-cloudformation-vpc-bucket.s3.us-east-1.amazonaws.com/templates/subnets.yml
+      Parameters:
+        VPCName: !Ref VPCName
+        environment: !Ref environment
+              
+    DependsOn: VPCStack
+  RouteTableStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://my-cloudformation-vpc-bucket.s3.us-east-1.amazonaws.com/templates/routetable.yml
+      Parameters:
+        VPCName: !Ref VPCName
+        environment: !Ref environment
+              
+    DependsOn: 
+      - SubnetStack 
+      - NATStack
+  NATStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://my-cloudformation-vpc-bucket.s3.us-east-1.amazonaws.com/templates/nat.yml
+      Parameters:
+        VPCName: !Ref VPCName
+        environment: !Ref environment
+             
+    DependsOn: SubnetStack
+

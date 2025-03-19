@@ -1,0 +1,12 @@
+[
+    {
+      "ParameterKey": "environment",
+      "ParameterValue": "test"
+    },
+    {
+      "ParameterKey": "VPCName",
+      "ParameterValue": "test-nuvista"
+    }
+
+  ]
+  

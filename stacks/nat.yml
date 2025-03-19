@@ -1,0 +1,35 @@
+Parameters:
+  VPCName:
+    Type: String
+    Description: Name of the VPC
+    Default: myVPC
+  environment:
+    Type: String
+    Description: The environment for the stack
+    Default: devlopment
+
+Resources:
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NATGatewayEIP.AllocationId
+      SubnetId: !ImportValue
+        Fn::Sub: "${VPCName}-PublicSubnet1Id"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "${VPCName}-NATGateway"
+
+  NATGatewayEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+
+Outputs:
+  NATGatewayId:
+    Description: The ID of the NAT Gateway
+    Value: !Ref NATGateway
+    Export:
+      Name: !Sub "${VPCName}-NatGatewayId"

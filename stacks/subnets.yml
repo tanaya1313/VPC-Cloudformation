@@ -1,0 +1,159 @@
+Parameters:
+  VPCName:
+    Type: String
+    Description: Name of the VPC
+    Default: myVPC
+  environment:
+    Type: String
+    Description: The environment for the stack
+    Default: devlopment
+
+Resources:
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Sub "${AWS::Region}a"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "public-${VPCName}-a"
+      MapPublicIpOnLaunch: true
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Sub "${AWS::Region}b"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "public-${VPCName}-b"
+      MapPublicIpOnLaunch: true
+  PublicSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: !Sub "${AWS::Region}c"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "public-${VPCName}-c"
+      MapPublicIpOnLaunch: true
+  PublicSubnet4:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.4.0/24
+      AvailabilityZone: !Sub "${AWS::Region}d"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "public-${VPCName}-d"
+      MapPublicIpOnLaunch: true
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.5.0/24
+      AvailabilityZone: !Sub "${AWS::Region}a"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "private-${VPCName}-a"
+      MapPublicIpOnLaunch: false
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.6.0/24
+      AvailabilityZone: !Sub "${AWS::Region}b"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "private-${VPCName}-b"
+      MapPublicIpOnLaunch: false
+  PrivateSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.7.0/24
+      AvailabilityZone: !Sub "${AWS::Region}c"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "private-${VPCName}-d"
+      MapPublicIpOnLaunch: false
+  PrivateSubnet4:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue
+        Fn::Sub: "${VPCName}-VPCId"
+      CidrBlock: 10.0.8.0/24
+      AvailabilityZone: !Sub "${AWS::Region}d"
+      Tags:
+      - Key: stack
+        Value: !Ref environment
+      - Key: Name
+        Value: !Sub "private-${VPCName}-d"
+      MapPublicIpOnLaunch: false
+
+Outputs:
+  PublicSubnet1Id:
+    Description: The ID of the public subnet 1
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: !Sub "${VPCName}-PublicSubnet1Id"
+  PublicSubnet2Id:
+    Description: The ID of the public subnet 2
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: !Sub "${VPCName}-PublicSubnet2Id"
+  PublicSubnet3Id:
+    Description: The ID of the public subnet 3
+    Value: !Ref PublicSubnet3
+    Export:
+      Name: !Sub "${VPCName}-PublicSubnet3Id"
+  PublicSubnet4Id:
+    Description: The ID of the public subnet 4
+    Value: !Ref PublicSubnet4
+    Export:
+      Name: !Sub "${VPCName}-PublicSubnet4Id"
+
+  PrivateSubnet1Id:
+    Description: The ID of the private subnet 1
+    Value: !Ref PrivateSubnet1
+    Export:
+      Name: !Sub "${VPCName}-PrivateSubnet1Id"
+  PrivateSubnet2Id:
+    Description: The ID of the private subnet 2
+    Value: !Ref PrivateSubnet2
+    Export:
+      Name: !Sub "${VPCName}-PrivateSubnet2Id"
+  PrivateSubnet3Id:
+    Description: The ID of the private subnet 3
+    Value: !Ref PrivateSubnet3
+    Export:
+      Name: !Sub "${VPCName}-PrivateSubnet3Id"
+  PrivateSubnet4Id:
+    Description: The ID of the private subnet 4
+    Value: !Ref PrivateSubnet4
+    Export:
+      Name: !Sub "${VPCName}-PrivateSubnet4Id"
